@@ -1,0 +1,19 @@
+; Mice Invaders -- a scaffold.
+;
+; Minimal on purpose: no main scene yet, because the first thing worth building is the
+; pure rules -- formation layout, how the swarm marches and drops, how it speeds up -- and
+; those need no scene at all. A delegated agent adds `run/main_scene` once there is
+; something to run.
+
+config_version=5
+
+[application]
+
+config/name="Mice Invaders"
+config/description="Space Invaders, except the player is a cat and the invaders are mice."
+config/features=PackedStringArray("4.3", "GL Compatibility")
+
+[rendering]
+
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"
