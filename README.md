@@ -71,23 +71,21 @@ into the same container) and push it to a registry the engine can pull from. The
 README has the Dockerfile and the two traps — a socket engine pulls too, and a plain-HTTP
 registry has to be trusted rather than merely reachable.
 
-## What you should see
+## What the loop actually does
 
-Wren turns the agenda into work items — real records, not a list in a message — and hands
-each to Pike. Pike's container comes up, installs the harness, clones the branch, and then
-the agent *works*: list the files, read the test runner to learn the contract, write
-`scripts/formation.gd`, write `tests/test_formation.gd`, run the suite, read the failure,
-fix it. A bounded summary comes back into the transcript in Pike's own voice — how many
-steps, which tools, what it concluded, what it cost.
+`Studio Lead Ash` turns the agenda into a work item and hands it to
+`Senior Developer Juno`. Juno's container comes up on your custom image, installs the
+harness, and the agent reads `tests/run_tests.gd` **before** writing any tests — which is
+the clearest sign it is really reading the repository rather than guessing at it. Then
+`scripts/formation.gd`, then the suite, then whatever it got wrong, then the fix.
 
-Then Wren reviews the diff against what it asked for. If the work is short, the item goes
-back with comments and Pike reworks it in the same container. When it passes, the branch
-is pushed to your fork and a pull request is opened.
+A bounded summary comes back in Juno's own voice — how many steps, which tools, what it
+concluded, what it cost — and Ash reviews the diff against the work item before the branch
+becomes a pull request on your fork.
 
-Every model call the harness makes goes through Pyrrhula's own inference proxy, so it
-lands in `usage_record` under `purpose='delegation'` and your caps apply to it. No provider
-key ever enters the container — the agent gets a short-lived, scoped token that can only
-spend on the connection its persona was given.
+Every model call the harness makes goes through Pyrrhula's own inference proxy, so delegated
+spend is metered under `purpose='delegation'` and daily caps apply to it. No provider key
+ever enters the container.
 
 ---
 
