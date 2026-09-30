@@ -103,6 +103,19 @@ name. **Kubernetes and ECS** pull from a registry, so push it to one the cluster
 reach and name it with the registry prefix — and if the registry is private, put its
 credentials on the repo row too.
 
+> **If your registry serves plain HTTP** — a local one usually does — the engine has to be
+> told to trust it, or the pull fails inside a delegation with `server gave HTTP response
+> to HTTPS client`, which reads like a broken image rather than a registry setting. For
+> rootless Podman that is `~/.config/containers/registries.conf`:
+>
+> ```toml
+> [[registry]]
+> location = "localhost:5000"
+> insecure = true
+> ```
+>
+> For k3s it is `mirrors:` in `/etc/rancher/k3s/registries.yaml`.
+
 > Pyrrhula does not build this image for you. An image builder is on its roadmap and is
 > not in the product yet, so for now a custom runtime is an image an operator builds and
 > hosts. There is nothing in the UI that does it, which is why this step is spelled out.
