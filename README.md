@@ -97,11 +97,22 @@ RUN godot --headless --version
 podman build -t localhost/pyr-godot-node:4.3 -f godot.Dockerfile .
 ```
 
-Where the image has to live depends on your engine. A **Podman or Docker socket** engine
-runs containers on the same host, so an image built locally is already reachable by that
-name. **Kubernetes and ECS** pull from a registry, so push it to one the cluster can
-reach and name it with the registry prefix — and if the registry is private, put its
-credentials on the repo row too.
+**Then push it to a registry** — including on a socket engine. It is tempting to assume
+that a Podman or Docker socket engine, running containers on the same host, can use an
+image you just built there; it cannot. Pyrrhula asks the engine to pull every image before
+it provisions, so a bare `localhost/...` name has no registry behind it and the delegation
+fails at provisioning. A local registry is enough:
+
+```sh
+podman run -d --name pyr-registry --restart=always \
+  -p 127.0.0.1:5000:5000 -v pyr-registry:/var/lib/registry docker.io/library/registry:2
+
+podman push --tls-verify=false localhost/pyr-godot-node:4.3 localhost:5000/pyr-godot-node:4.3
+```
+
+and the repo's **Runtime image** is then `localhost:5000/pyr-godot-node:4.3`. Kubernetes
+and ECS are the same story with a registry the cluster can reach; if it is private, put
+its credentials on the repo row too.
 
 > **If your registry serves plain HTTP** — a local one usually does — the engine has to be
 > told to trust it, or the pull fails inside a delegation with `server gave HTTP response
@@ -153,7 +164,7 @@ and your API key.
 | Source URL | `https://github.com/<you>/mice-invaders` |
 | Access token | the token from step 3 |
 | Runtime | `custom` |
-| Runtime image | `localhost/pyr-godot-node:4.3` (or your registry's name for it) |
+| Runtime image | `localhost:5000/pyr-godot-node:4.3` (your registry's name for it) |
 | Test command | `godot --headless --path . --script tests/run_tests.gd` |
 
 Pyrrhula clones your fork into its own hosted store. Delegated containers clone *that*
