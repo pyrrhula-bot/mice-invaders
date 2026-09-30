@@ -1,0 +1,11 @@
+# Godot 4 editor state and import cache -- machine-local, never committed.
+.godot/
+.import/
+export.cfg
+export_presets.cfg
+
+# Exported builds
+build/
+dist/
+*.tmp
+.DS_Store
