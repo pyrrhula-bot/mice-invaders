@@ -38,12 +38,12 @@ func test_step_past_right_edge_drops_row_and_reverses() -> void:
 
 func test_step_past_left_edge_drops_row_and_reverses() -> void:
 	var formation := Formation.new()
-	formation.setup(1, 2, Vector2(50, 40), Vector2(100, 100))
+	formation.setup(1, 2, Vector2(50, 40), Vector2(80, 100))
 	formation.direction = -1
 	var initial_y: float = formation.positions[0].y
 	formation.step(50, 300)
 	assert_almost_eq(formation.positions[0].y, initial_y + 40.0, 0.01, "dropped one row")
-	assert_almost_eq(formation.positions[0].x, 100.0, 0.01, "x position unchanged after drop")
+	assert_almost_eq(formation.positions[0].x, 80.0, 0.01, "x position unchanged after drop")
 	assert_eq(formation.direction, 1, "direction reversed to positive")
 
 
